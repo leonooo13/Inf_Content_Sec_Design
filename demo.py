@@ -1,4 +1,5 @@
 #coding=utf-8
+# 调用库
 import tkinter as tk
 import requests
 import jieba
@@ -6,21 +7,9 @@ import jieba.analyse
 import math
 from bs4 import BeautifulSoup as bs
 import re
+# 过滤器可以针对文章动态增减
 filtter={"新浪":0,"广告":0,"的":0,"黑体":0,"楷体":0}
 filtter1=["新浪","广告"]
-# def get_html(url):
-#     import requests
-#     try:
-#         # 设置请求头
-#         headers = {
-#             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36'
-#         }
-#         # 发送请求
-#         response = requests.get(url, headers=headers)
-#         # 返回结果
-#         return response.content.decode('utf-8')
-#     except:
-#         return "ERROR"
 def get_html(url):
     try:
         # 设置请求头
@@ -42,18 +31,7 @@ def get_html(url):
         return "".join(c)
     except:
         return "ERROR"
-# 解析源代码的中文字符串
-# def get_chinese(html):
-#     import re
-#     chinese = re.findall(r'[\u4e00-\u9fa5]+', html)
-#     # 换行返回
-#     return ''.join(chinese)
-# def get_article(url):
-#     h=get_html(url)
-#     if h!="ERROR":
-#         return get_chinese(h)
-#     else:
-#         return 0
+# 获取文章词组的tf值
 def get_tf(article):
     list=jieba.lcut(article,cut_all="True")
     list2=jieba.analyse.extract_tags(article,withWeight=True)
@@ -67,6 +45,7 @@ def get_tf(article):
     dic.update(filtter)
     print(dic,list1)
     return dic,list1
+# 获取相似度
 def get_simiar(dic1,dic2):
     dic={}
     dic.update(dic1)
@@ -84,6 +63,7 @@ def get_simiar(dic1,dic2):
     for i in dic2:
         downnum2+=dic2[i]*dic2[i]
     return upnum/(math.sqrt(downnum1)*math.sqrt(downnum2))
+# 界面显示，输出到图形界面
 def show():
     # print("start")
     url1=input1.get()
@@ -120,6 +100,7 @@ if __name__=="__main__":
     input2=tk.Entry(root,width=60,font=5)
     input2.grid(row=1,column=1)
     tk.Button(root,text="计算",width=7,height=2,font=4,bg="gray",fg="purple",command=show).grid(row=1,column=2,padx=30)
+    # 测试URL
     # http://blog.sina.com.cn/s/blog_4a015e940102zalj.html?tj=hist
     # http://blog.sina.com.cn/s/blog_49d5822c0102z3tw.html?tj=hist
     tt1=tk.Text(root,width=60,height=2,font=5)
